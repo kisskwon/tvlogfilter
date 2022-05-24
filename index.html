@@ -11,7 +11,6 @@
     import { registerDb } from "./tvlog.js";
 
     registerDb((data) => {
-      console.log("childAdded", data.val().text);
       const li = document.createElement("li");
       li.innerHTML = data.val().text;
       document.getElementById("logs").appendChild(li);

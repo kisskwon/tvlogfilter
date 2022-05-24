@@ -24,19 +24,23 @@ const app = initializeApp(firebaseConfig);
 // Get a reference to the database service
 export const db = getDatabase(app);
 
-function tvlog(tag, text) {
+function tvlog(...text) {
   var now = new Date();
   const time =
     now.toLocaleTimeString("en-GB") +
     `.${now.getMilliseconds().toString().padStart(3, "0")}`;
 
-  var result = time + "&emsp; " + tag + "&emsp;" + text;
-  set(ref(db, "logs/" + now.getTime() + "_" + tag), {
+  var result = time;
+  for (var t in text) {
+    result += "&emsp;" + text[t];
+  }
+  set(ref(db, "logs/" + now.getTime()), {
     time: time,
-    tag: tag,
     text: result,
   });
+  console.log(...text);
 }
+console.log("tvLog.js set tvlog global");
 window.tvlog = tvlog;
 
 function tvlogclear() {
@@ -45,5 +49,5 @@ function tvlogclear() {
 window.tvlogclear = tvlogclear;
 
 export function registerDb(doChanged) {
-  onChildAdded(ref(db, "/logs/"), doChanged);
+  onChildAdded(ref(db, "logs/"), doChanged);
 }
