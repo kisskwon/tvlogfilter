@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <title>TQTALK</title>
+  <meta name="nosnippet">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script type="module" src="tvlog.js">
+  </script>
+
+  <style>
+    body {
+      font-family:"맑은 고딕", verdana, sans-serif;
+    }
+    ul{
+      list-style:none;
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    function clearAll() {
+      window.tvlogclear();
+      document.getElementById("logs").innerHTML = "";
+    }
+    </script>
+  <div>
+    <button onclick="clearAll()">Clear</button>
+    <ul id="logs"></ul>
+  </div>
+</body>
+
+</html>
