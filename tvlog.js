@@ -1,9 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-app.js";
 import {
   getDatabase,
-  onChildAdded,
   ref,
-  remove,
   set,
 } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-database.js";
 
@@ -38,16 +36,3 @@ function tvlog(tag, text) {
   });
 }
 window.tvlog = tvlog;
-
-onChildAdded(ref(db, "/logs/"), (data) => {
-  console.log("childAdded", data.val().text);
-  const li = document.createElement("li");
-  li.innerHTML = data.val().text;
-  document.getElementById("logs").appendChild(li);
-});
-
-function clear() {
-  remove(ref(db, "logs/"));
-}
-
-window.tvlogclear = clear;

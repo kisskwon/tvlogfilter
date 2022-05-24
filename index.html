@@ -7,14 +7,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script type="module" src="tvlog.js">
+    import { onChildAdded, remove } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-database.js";
+
+    onChildAdded(ref(db, "/logs/"), (data) => {
+      console.log("childAdded", data.val().text);
+      const li = document.createElement("li");
+      li.innerHTML = data.val().text;
+      document.getElementById("logs").appendChild(li);
+    });
+
+    window.tvlogclear = () => remove(ref(db, "logs/"));
   </script>
 
   <style>
     body {
-      font-family:"맑은 고딕", verdana, sans-serif;
+      font-family: "맑은 고딕", verdana, sans-serif;
     }
-    ul{
-      list-style:none;
+
+    ul {
+      list-style: none;
     }
   </style>
 </head>
@@ -25,7 +36,7 @@
       window.tvlogclear();
       document.getElementById("logs").innerHTML = "";
     }
-    </script>
+  </script>
   <div>
     <button onclick="clearAll()">Clear</button>
     <ul id="logs"></ul>
