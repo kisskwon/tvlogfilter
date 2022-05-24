@@ -6,17 +6,16 @@
   <meta name="nosnippet">
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <script type="module" src="tvlog.js">
-    import { onChildAdded, remove } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-database.js";
+  <script type="module" src="tvlog.js"></script>
+  <script type="module">
+    import { registerDb } from "./tvlog.js";
 
-    onChildAdded(ref(db, "/logs/"), (data) => {
+    registerDb((data) => {
       console.log("childAdded", data.val().text);
       const li = document.createElement("li");
       li.innerHTML = data.val().text;
       document.getElementById("logs").appendChild(li);
     });
-
-    window.tvlogclear = () => remove(ref(db, "logs/"));
   </script>
 
   <style>
@@ -38,6 +37,7 @@
 
 <body>
   <script>
+    console.log("kks", window);
     function clearAll() {
       window.tvlogclear();
       document.getElementById("logs").innerHTML = "";

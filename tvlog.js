@@ -1,7 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-app.js";
 import {
   getDatabase,
+  onChildAdded,
   ref,
+  remove,
   set,
 } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-database.js";
 
@@ -20,7 +22,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Get a reference to the database service
-const db = getDatabase(app);
+export const db = getDatabase(app);
 
 function tvlog(tag, text) {
   var now = new Date();
@@ -36,3 +38,12 @@ function tvlog(tag, text) {
   });
 }
 window.tvlog = tvlog;
+
+function tvlogclear() {
+  remove(ref(db, "logs/"));
+}
+window.tvlogclear = tvlogclear;
+
+export function registerDb(doChanged) {
+  onChildAdded(ref(db, "/logs/"), doChanged);
+}
