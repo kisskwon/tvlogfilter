@@ -32,7 +32,16 @@ function tvlog(...text) {
 
   var result = time;
   for (var t in text) {
-    result += "&emsp;" + text[t];
+    var item = text[t];
+    if (typeof text[t] === "object") {
+      try {
+        item = JSON.stringify(text[t]);
+      } catch (e) {
+        result += "&emsp;" + e.name + " " + e.message;
+        break;
+      }
+    }
+    result += "&emsp;" + item;
   }
   set(ref(db, "logs/" + now.getTime()), {
     time: time,
@@ -40,7 +49,7 @@ function tvlog(...text) {
   });
   console.log(...text);
 }
-console.log("tvLog.js set tvlog global");
+tvlog("tvLog.js set tvlog global");
 window.tvlog = tvlog;
 
 function tvlogclear() {
