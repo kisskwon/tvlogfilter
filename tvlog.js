@@ -37,20 +37,19 @@ function tvlog(...text) {
       try {
         item = JSON.stringify(text[t]);
       } catch (e) {
-        console.log(e);
         if (
           e instanceof TypeError &&
           e.message.includes("Converting circular structure to JSON")
         ) {
-          result = "{";
+          item = "{";
           for (var out in text[t]) {
-            result += '"' + out + '": ' + '"' + text[t][out] + '",<br />';
+            item += '"' + out + '": ' + '"' + text[t][out] + '",<br />';
           }
-          result += "}";
+          item += "}";
         } else {
           result = e.name + "&emsp;" + e.message.replace(/\n/g, "<br/>&emsp;");
+          break;
         }
-        break;
       }
     }
     result += item + "&emsp;";
