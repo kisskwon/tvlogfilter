@@ -30,18 +30,30 @@ function tvlog(...text) {
     now.toLocaleTimeString("en-GB") +
     `.${now.getMilliseconds().toString().padStart(3, "0")}`;
 
-  var result = time;
+  var result = "";
   for (var t in text) {
     var item = text[t];
     if (typeof text[t] === "object") {
       try {
         item = JSON.stringify(text[t]);
       } catch (e) {
-        result += "&emsp;" + e.name + " " + e.message;
+        console.log(e);
+        if (
+          e instanceof TypeError &&
+          e.message.includes("Converting circular structure to JSON")
+        ) {
+          result = "{";
+          for (var out in text[t]) {
+            result += '"' + out + '": ' + '"' + text[t][out] + '",<br />';
+          }
+          result += "}";
+        } else {
+          result = e.name + "&emsp;" + e.message.replace(/\n/g, "<br/>&emsp;");
+        }
         break;
       }
     }
-    result += "&emsp;" + item;
+    result += item + "&emsp;";
   }
   set(ref(db, "logs/" + now.getTime()), {
     time: time,

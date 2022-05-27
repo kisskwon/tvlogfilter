@@ -12,7 +12,14 @@
 
     registerDb((data) => {
       const li = document.createElement("li");
-      li.innerHTML = data.val().text;
+      li.style.display = "flex";
+      const time = document.createElement("span");
+      time.style.marginRight = "15px";
+      time.innerHTML = data.val().time;
+      li.appendChild(time);
+      const description = document.createElement("span");
+      description.innerHTML = data.val().text;
+      li.appendChild(description);
       document.getElementById("logs").appendChild(li);
     });
   </script>
