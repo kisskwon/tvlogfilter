@@ -38,7 +38,7 @@ function sendPost(message) {
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
       if (httpRequest.status === 200 || httpRequest.status === 201) {
         var result = httpRequest.response;
-        console.log(result.message);
+        console.log(result);
       } else {
         alert("Request Error!");
       }
