@@ -23,6 +23,7 @@
       document.getElementById("logs").appendChild(li);
     });
   </script>
+  <script src="tvlog.js"></script>
 
   <style>
     body {
@@ -48,8 +49,20 @@
       window.tvlogclear();
       document.getElementById("logs").innerHTML = "";
     }
+
+    function timer(ms) {
+      return new Promise(res=>setTimeout(res, ms));
+    }
+
+    async function sendTvLog() {
+      for (var i=0; i<20; i++) {
+        sendPost(i);
+        await timer(50);
+      }
+    }
   </script>
   <div>
+    <button onclick="sendTvLog()">Bon</button>
     <button onclick="clearAll()">Clear</button>
     <ul id="logs"></ul>
   </div>
