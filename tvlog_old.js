@@ -24,6 +24,21 @@ const app = initializeApp(firebaseConfig);
 // Get a reference to the database service
 export const db = getDatabase(app);
 
+export function registerDb(doChanged) {
+  onChildAdded(ref(db, "logs/"), doChanged);
+}
+
+function getCircularReplacer() {
+  const cache = new WeakSet();
+  return (k, v) => {
+    if (typeof v === "object" && v != null) {
+      if (cache.has(v)) return;
+      cache.add(v);
+    }
+    return v;
+  };
+}
+
 function tvlog(...text) {
   var now = new Date();
   const time =
@@ -33,41 +48,30 @@ function tvlog(...text) {
   var result = "";
   for (var t in text) {
     var item = text[t];
-    if (typeof text[t] === "object") {
-      try {
-        item = JSON.stringify(text[t]);
-      } catch (e) {
-        if (
-          e instanceof TypeError &&
-          e.message.includes("Converting circular structure to JSON")
-        ) {
-          item = "{";
-          for (var out in text[t]) {
-            item += '"' + out + '": ' + '"' + text[t][out] + '",<br />';
-          }
-          item += "}";
-        } else {
-          result = e.name + "&emsp;" + e.message.replace(/\n/g, "<br/>&emsp;");
-          break;
-        }
-      }
+    if (result) {
+      result += " | ";
     }
-    result += item + "&emsp;";
+    var item = text[t];
+    if (typeof item === "object") {
+      item = JSON.stringify(item, getCircularReplacer());
+    }
+    result += item;
   }
+  sendPost(result);
+  console.log("[tvlog]", result);
+}
+
+function sendPost(message) {
   set(ref(db, "logs/" + now.getTime()), {
     time: time,
     text: result,
   });
-  console.log(...text);
 }
-tvlog("tvLog.js set tvlog global");
-window.tvlog = tvlog;
 
 function tvlogclear() {
   remove(ref(db, "logs/"));
 }
-window.tvlogclear = tvlogclear;
 
-export function registerDb(doChanged) {
-  onChildAdded(ref(db, "logs/"), doChanged);
-}
+tvlog("tvLog enable global");
+window.tvlog = tvlog;
+window.tvlogclear = tvlogclear;

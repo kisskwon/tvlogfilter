@@ -44,7 +44,6 @@
 
 <body>
   <script>
-    console.log("kks", window);
     function clearAll() {
       window.tvlogclear();
       document.getElementById("logs").innerHTML = "";
@@ -54,15 +53,15 @@
       return new Promise(res=>setTimeout(res, ms));
     }
 
-    async function sendTvLog() {
+    async function ddosBonlog() {
       for (var i=0; i<20; i++) {
-        sendPost(i);
+        window.tvlog(i);
         await timer(50);
       }
     }
   </script>
   <div>
-    <button onclick="sendTvLog()">Bon</button>
+    <button onclick="ddosBonlog()">Bon</button>
     <button onclick="clearAll()">Clear</button>
     <ul id="logs"></ul>
   </div>

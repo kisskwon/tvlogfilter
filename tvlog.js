@@ -1,36 +1,31 @@
 const URL = "http://bonkab.com:49162/tvlog/_doc";
 
+function getCircularReplacer() {
+  const cache = new WeakSet();
+  return (k, v) => {
+    if (typeof v === "object" && v != null) {
+      if (cache.has(v)) return;
+      cache.add(v);
+    }
+    return v;
+  };
+}
+
 function tvlog(...text) {
   var result = "";
   for (var t in text) {
-    var item = text[t];
-    if (typeof text[t] === "object") {
-      try {
-        item = JSON.stringify(text[t]);
-      } catch (e) {
-        if (
-          e instanceof TypeError &&
-          e.message.includes("Converting circular structure to JSON")
-        ) {
-          item = "{";
-          for (var out in text[t]) {
-            item += '"' + out + '": ' + '"' + text[t][out] + '",<br />';
-          }
-          item += "}";
-        } else {
-          result = e.name + "&emsp;" + e.message.replace(/\n/g, "<br/>&emsp;");
-          break;
-        }
-      }
+    if (result) {
+      result += " | ";
     }
-    result += item + "&emsp;";
+    var item = text[t];
+    if (typeof item === "object") {
+      item = JSON.stringify(item, getCircularReplacer());
+    }
+    result += item;
   }
   sendPost(result);
-  console.log(...text);
+  console.log("[tvlog]", result);
 }
-
-tvlog("tvLog.js set tvlog global");
-window.tvlog = tvlog;
 
 function sendPost(message) {
   var httpRequest = new XMLHttpRequest();
@@ -47,7 +42,10 @@ function sendPost(message) {
 
   httpRequest.open("POST", URL, true);
   httpRequest.setRequestHeader("Content-Type", "application/json");
-
-  var now = Date.now();
-  httpRequest.send(JSON.stringify({ message: message, "@timestamp": now }));
+  httpRequest.send(
+    JSON.stringify({ message: message, "@timestamp": Date.now() })
+  );
 }
+
+tvlog("tvLog enable global");
+window.tvlog = tvlog;
