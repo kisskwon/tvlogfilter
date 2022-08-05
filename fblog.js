@@ -40,14 +40,8 @@ function getCircularReplacer() {
 }
 
 function tvlog(...text) {
-  var now = new Date();
-  const time =
-    now.toLocaleTimeString("en-GB") +
-    `.${now.getMilliseconds().toString().padStart(3, "0")}`;
-
   var result = "";
   for (var t in text) {
-    var item = text[t];
     if (result) {
       result += " | ";
     }
@@ -62,9 +56,14 @@ function tvlog(...text) {
 }
 
 function sendPost(message) {
+  var now = new Date();
+  const time =
+    now.toLocaleTimeString("en-GB") +
+    `.${now.getMilliseconds().toString().padStart(3, "0")}`;
+
   set(ref(db, "logs/" + now.getTime()), {
     time: time,
-    text: result,
+    text: message,
   });
 }
 
